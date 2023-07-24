@@ -65,7 +65,6 @@ public class App {
             }
             userResponse = input.next().charAt(0);
         }
-        input.close();
 
         // Calling RetrieveMultipleRecords action on the Business_Contact entity
         HashMap<String, Object> retrieveData = new HashMap<String, Object>();
@@ -86,5 +85,54 @@ public class App {
                 System.out.println(i + 1 + ": " + array.get(i));
             }
         }
+
+        // Updating records by taking input from user
+        System.out.println("Do you want update a record (y/n): ");
+        char userUpdateResponse = input.next().charAt(0);
+        while (userUpdateResponse == 'Y' || userUpdateResponse == 'y') {
+            // Clearing new line from buffer
+            input.nextLine();
+            System.out.println("Enter ContactId: ");
+            String contactId = input.nextLine();
+            System.out.println("Enter FirstName: ");
+            String firstName = input.nextLine();
+            System.out.println("Enter LastName: ");
+            String lastName = input.nextLine();
+            System.out.println("Enter Phone: ");
+            String phone = input.nextLine();
+            System.out.println("Enter Email: ");
+            String email = input.nextLine();
+            HashMap<String, Object> updateData = new HashMap<String, Object>();
+            updateData.put("Business_ContactId", contactId);
+            updateData.put("FirstName", firstName);
+            updateData.put("LastName", lastName);
+            updateData.put("Phone", phone);
+            updateData.put("Email", email);
+            JSONObject updateDataJson = new JSONObject(updateData);
+            request = updateDataJson.toJSONString();
+            api.postData("/Business_Contact/UpdateRecord", request, sessionID);
+            System.out.println("Record Updated!");
+            System.out.println("Do you want update another record (y/n): ");
+            userUpdateResponse = input.next().charAt(0);
+        }
+
+        // Deleting records by taking input from user
+        System.out.println("Do you want delete a record (y/n): ");
+        char userDeleteResponse = input.next().charAt(0);
+        while (userDeleteResponse == 'Y' || userDeleteResponse == 'y') {
+            input.nextLine();
+            System.out.println("Enter ContactId: ");
+            String contactId = input.nextLine();
+            HashMap<String, Object> businessData = new HashMap<String, Object>();
+            businessData.put("Business_ContactId", contactId);
+            JSONObject businessDataJson = new JSONObject(businessData);
+            request = businessDataJson.toJSONString();
+            api.postData("/Business_Contact/DeleteRecord", request, sessionID);
+            System.out.println("Record Deleted");
+            System.out.println("Do you want delete a record (y/n): ");
+            userDeleteResponse = input.next().charAt(0);
+        }
+
+        input.close();
     }
 }
